@@ -13,7 +13,7 @@
         @csrf
             <div class="form-group mt-5">
                 <label for="img">Введите ссылку на изображение</label>
-                <input class="form-control" type="text" name="img" placeholder="Ссылка на изображение" id="img" value="{{$data->img ?? old('img') ??'' }}">
+                <input class="form-control" type="text" name="img" placeholder="Ссылка на изображение" id="img" value="{{$data->img ?? old('img') ?? 'https://tipsmake.com/data1/thumbs/how-to-extract-img-files-in-windows-10-thumb-bzxI4IDgg.jpg'}}">
             </div>
 
         <div class="form-group mt-2">

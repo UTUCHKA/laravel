@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GalleryRequest;
 use App\Models\GalleryModel;
 use App\Services\ApiService;
-use App\Services\ConvertFromJsonService;
+use App\Services\AlbumService;
 use Exception;
 
 class GalleryController extends Controller
 {
 
-    public function add(GalleryRequest $request)
+    public function store(GalleryRequest $request)
     {
 
         GalleryModel::create([
@@ -20,20 +20,37 @@ class GalleryController extends Controller
             'artist' => $request->artist,
             'album' => $request->album,
             'img' => $request->img,
-            'info' =>  $this->stripLinks($request->info),
+            'info' => preg_replace('#<a.*?>.*?</a>#i', '', $request->info),
         ]);
 
         return redirect()->route('gallery')->with('success', "Альбом был добавлен");
     }
 
+    public function create(){
+        return view('playlistcreate');
+    }
+
     public function prefill(Request $request){
-        $data= (new ApiService)->api($request);
+        $htmlbuildquery = array(
+            'method'=>'album.getinfo',
+            'api_key'=>config('apiconfig.apiKey'),
+            'artist'=>$request->artist,
+            'album'=>$request->album,
+            'format'=>'json'
+        );
+        $url = config('apiconfig.url') . "?" . http_build_query($htmlbuildquery);
+        $data= (new ApiService)->api($url);
         if($data instanceof Exception){
-            return redirect()->route('playlistAutocomplete')->with('notFound', "Альбом или исолнитель не найдены"); 
+
+            return redirect()->route('playlistAutocomplete')->with('notFound', "Альбом или исполнитель не найдены"); 
         }
-        $res= (new ConvertFromJsonService)->convertFromJson($data);
+        $res= (new AlbumService)->album($data);
 
         return view('playlistcreate', ['data' => $res]);
+    }
+
+    public function showPrefill(){
+        return view('playlistAutocomplete');
     }
 
     public function index(){
@@ -69,9 +86,4 @@ class GalleryController extends Controller
         $delete->delete();
         return redirect()->route('gallery', $id)->with('success', "Альбом был Удален");
     }
-
-    public function stripLinks($info){
-        return preg_replace('#<a.*?>.*?</a>#i', '',$info);
-    }
-
 }

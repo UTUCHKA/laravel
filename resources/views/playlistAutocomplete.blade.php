@@ -10,14 +10,11 @@
 
         <div class="form-group mt-4">
             <label for="artist">Введите исполнителя</label>
-            <input class="form-control" type="text" name="artist" placeholder="Исполнитель" id="artist"
-                   >
+            <input class="form-control" type="text" name="artist" placeholder="Исполнитель" id="artist" value="{{ old('artist') }}">
         </div>
-
         <div class="form-group mt-2">
             <label for="album">Введите название альбома</label>
-            <input class="form-control" type="text" name="album" placeholder="Название альбома" id="album"
-                   >
+            <input class="form-control" type="text" name="album" placeholder="Название альбома" id="album" value="{{ old('album') }}">
         </div>
         <button type="submit" class="btn btn-success mt-2">Сохранить</button>
     </form>

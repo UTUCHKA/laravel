@@ -13,21 +13,21 @@
         @csrf
             <div class="form-group mt-5">
                 <label for="img">Выберите изображение для обложки</label>
-                <input class="form-control" type="text" name="img" id="img" value="{{ $data->img ?? '' }}">
+                <input class="form-control" type="text" name="img" id="img" value="{{ $data->img ?? old('img') ?? '' }}">
             </div>
 
         <div class="form-group mt-2">
             <label for="artist">Введите исполнителя</label>
-            <input class="form-control" type="text" name="artist" placeholder="Исполнитель" id="artist" value="{{ $data->artist ?? '' }}">
+            <input class="form-control" type="text" name="artist" placeholder="Исполнитель" id="artist" value="{{ $data->artist ?? old('artist') ?? '' }}">
         </div>
 
         <div class="form-group mt-2">
             <label for="album">Введите название альбома</label>
-            <input class="form-control" type="text" name="album" placeholder="Название альбома" id="album" value="{{ $data->album ?? '' }}">
+            <input class="form-control" type="text" name="album" placeholder="Название альбома" id="album" value="{{ $data->album ?? old('album') ?? '' }}">
         </div>
         <div class="form-group mt-2">
             <label for="info">Введите информацию об альбоме</label>
-            <textarea class="form-control" rows="6" name="info" id="info" placeholder="введите информацию">{{ $data->info ?? '' }}</textarea>
+            <textarea class="form-control" rows="6" name="info" id="info" placeholder="введите информацию">{{ $data->info ?? old('info') ?? '' }}</textarea>
         </div>
         <button type="submit" class="btn btn-success mt-2">Сохранить</button>
     </form>

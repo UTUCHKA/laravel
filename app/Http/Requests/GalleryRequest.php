@@ -35,7 +35,7 @@ class GalleryRequest extends FormRequest
         return [
             'artist.required' => 'Поле исполнителя является обязательным',
             'album.required' => 'Поле альбома является обязательным',
-            'img.required' => 'Загрузите изображение',
+            'img.required' => 'Поле изображения является обязательным',
             'info.required' => 'Поле информации является обязательным',
         ];
     }

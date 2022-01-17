@@ -1,6 +1,6 @@
 <?php
 
-use GuzzleHttp\Middleware;
+use App\Http\Controllers\GalleryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,43 +15,35 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', 'App\Http\Controllers\GalleryController@index', function () {
+Route::get('/', [GalleryController::class, 'index'], function () {
     return view('gallery');
 })->name('gallery');
 
+Route::get('/playlist/{id}', [GalleryController::class, 'open'])->name('showplaylist');
+    
 Route::group(
     [
-        'prefix' => 'gallery'
+        'middleware' => 'auth'
     ], function () {
-
-    Route::get('/playlist/{id}', 'App\Http\Controllers\GalleryController@open')->name('showplaylist');
-    
-    Route::group(
-        [
-            'middleware' => 'auth'
-        ], function () {
-            
-            Route::get('/create', function () {
-            return view('playlistcreate');
-            })->name('playlistcreate');
-    
-            Route::get('/create/autocomplete', function () {
-            return view('playlistAutocomplete');
-            })->name('playlistAutocomplete');
-        });
-    Route::group(
-        [
-            'prefix' => 'playlist',
-            'middleware' => 'auth'
-        ], function () {
-
         
-        Route::get('/{id}/update', 'App\Http\Controllers\GalleryController@edit')->name('updateplaylist');
-        Route::get('/{id}/delete', 'App\Http\Controllers\GalleryController@delete')->name('deleteplaylist');
-        Route::post('/{id}/update/submit', 'App\Http\Controllers\GalleryController@update')->name('updatesubmit');
-        Route::post('/create/submit', 'App\Http\Controllers\GalleryController@add')->name('playlistcreateSubmit');
-        Route::post('/create', 'App\Http\Controllers\GalleryController@prefill')->name('playlistAutocompleteSubmit');
-    });
+        Route::get('/create', [GalleryController::class, 'create'])->name('playlistcreate');
+        Route::post('/create', [GalleryController::class, 'prefill'])->name('playlistAutocompleteSubmit');
+
+        Route::get('/create/autocomplete', [GalleryController::class, 'showPrefill'])->name('playlistAutocomplete');
+        Route::post('/create/submit', [GalleryController::class, 'store'])->name('playlistcreateSubmit'); 
+
+
+            Route::group(
+                [
+                    'prefix' => 'playlist'
+                ], function () {
+                
+                Route::get('/{id}/update', [GalleryController::class, 'edit'])->name('updateplaylist');
+                Route::post('/{id}/update/submit', [GalleryController::class, 'update'])->name('updatesubmit');
+                Route::get('/{id}/delete', [GalleryController::class, 'delete'])->name('deleteplaylist');
+
+
+            });
 });
 
 require __DIR__.'/auth.php';
